@@ -5,7 +5,7 @@
 ## Team Members:
 
 - Aaron Lin, linaaron88
-- full name, github handle
+- Sara Soderberg, sodesara
 
 This repository is a template for your team's repository.
 

@@ -14,6 +14,7 @@ library(tmap)      #interactive maps, raster + vector layers
 library(terra)       # Successor to the raster library
 library(tidyverse)   # our old friend
 library(sf)          # to work with simple features (vector) data
+library(rstac)
 ```
 
 ## Learning objectives
@@ -47,6 +48,11 @@ Please take the time to read the introduction to this dataset [here](https://dsl
 
 ```{r}
 sanfran <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/CASanFrancisco1937.geojson")
+losang <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/CALosAngeles1939.geojson")
+seattle <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/WASeattle1936.geojson")
+kansascity <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/MOGreaterKansasCity1939.geojson")
+brooklyn <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/NYBrooklyn1938.geojson")
+
 tmap_options(check.and.fix = TRUE)
 
 tmap_mode("view")
@@ -59,12 +65,45 @@ sanfran |> tmap::tm_shape() +
 **2.Normalized Difference Vegetation Index (NDVI)** (raster data)
 NDVI is used as proxy measure of vegetation health, cover and phenology (life cycle stage) over large areas. It is calculated using multiple bands from satellite images.
 
+```{r}
+bbox <- st_bbox(brooklyn)
+
+s_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/")
+
+it_obj <- s_obj |> 
+  stac_search(collections="sentinel-2-l2a",
+              bbox =bbox,
+              datetime = "2019-06-01/2019-08-01"
+  ) |>
+  get_request() |> 
+  items_sign(sign_fn = sign_planetary_computer())
+```
+
+
+```{r}
+properties <- map(it_obj$features, "properties")
+cloud_cover <- map_dbl(properties, "eo:cloud_cover")
+
+best <- which.min(cloud_cover)
+
+best_img <- it_obj$features[[best]]
+
+download_url <- best_img$assets$visual$href
+vsi_url <- paste0("/vsicurl/", download_url)
+```
+
+```{r}
+# paste in the download_url after the vsicurl
+sf_rast <- terra::rast(vsi_url)
+plot(sf_rast)
+```
 
 
 # Exercise 1
 **Create a map which shows current (2019) mean NDVI across city redlining from the 1950s.**
 
 ```{r}
+
 ```
 
 # Exercise 2
