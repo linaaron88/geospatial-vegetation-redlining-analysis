@@ -1,9 +1,10 @@
 
 *add github actions badge here*
+[![Reproducibility](https://github.com/espm-157/spatial-sara-aaron-geospatial/actions/workflows/main.yml/badge.svg)](https://github.com/espm-157/spatial-sara-aaron-geospatial/actions/workflows/main.yml)
 
 ## Team Members:
 
-- full name, github handle
+- Aaron Lin, linaaron88
 - full name, github handle
 
 This repository is a template for your team's repository.
