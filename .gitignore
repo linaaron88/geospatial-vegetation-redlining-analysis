@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.Rbuildignore
+.Renviron
+.manifest.json
+.DS_Store
+*.html
+*.tiff
+*.shp
