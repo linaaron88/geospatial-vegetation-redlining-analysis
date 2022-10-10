@@ -19,13 +19,14 @@ published a review in *Science* on [‘The ecological and evolutionary
 consequences of systemic racism in urban
 environments’](https://science.sciencemag.org/content/early/2020/08/12/science.aay4497)
 (DOI: 10.1126/science.aay4497), showing how systematic racism and
-classism has significant impacts on ecologial and evolutionary processes
-within urban environments. Here we explore a subset of the data used to
-support these findings in this review and the broaded literature.
+classism has significant impacts on ecological and evolutionary
+processes within urban environments. Here we explore a subset of the
+data used to support these findings in this review and the broader
+literature.
 
 The [press
 release](https://www.washington.edu/news/2020/08/13/systemic-racism-has-consequences-for-all-life-in-cities/)
-on the paper is worth a read if you have the time:
+on the paper is worth a read:
 
 > “Racism is destroying our planet, and how we treat each other is
 > essentially structural violence against our natural world,” said lead
@@ -58,20 +59,20 @@ Please take the time to read the introduction to this dataset
 
 > “As you explore the materials Mapping Inequality, you will quickly
 > encounter exactly that kind of language, descriptions of
-> the”infiltration" of what were quite often described as
-> “subversive,” “undesirable,” “inharmonious,” or “lower grade”
-> populations, for they are everywhere in the HOLC archive ….These
-> grades were a tool for redlining: making it difficult or impossible
-> for people in certain areas to access mortgage financing and thus
-> become homeowners. Redlining directed both public and private capital
-> to native-born white families and away from African American and
-> immigrant families. As homeownership was arguably the most significant
-> means of intergenerational wealth building in the United States in the
+> the”infiltration” of what were quite often described as “subversive,”
+> “undesirable,” “inharmonious,” or “lower grade” populations, for they
+> are everywhere in the HOLC archive ….These grades were a tool for
+> redlining: making it difficult or impossible for people in certain
+> areas to access mortgage financing and thus become homeowners.
+> Redlining directed both public and private capital to native-born
+> white families and away from African American and immigrant families.
+> As homeownership was arguably the most significant means of
+> intergenerational wealth building in the United States in the
 > twentieth century, these redlining practices from eight decades ago
 > had long-term effects in creating wealth inequalities that we still
 > see today. Mapping Inequality, we hope, will allow and encourage you
 > to grapple with this history of government policies contributing to
-> inequality."
+> inequality.”
 
 **2.Normalized Difference Vegetation Index (NDVI)** (raster data) NDVI
 is used as proxy measure of vegetation health, cover and phenology (life
