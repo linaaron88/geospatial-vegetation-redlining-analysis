@@ -98,8 +98,8 @@ library(stars)
 birm_stars <- stars::read_stars(vsi_url)
 birm_crs <- st_crs(birm_stars)
 bbox_poly <- bbox |> st_as_sfc() |> st_transform(birm_crs)
-brim_stars2 <- birm_stars |> st_crop(bbox_poly)
-brim_stars2 |> plot(rgb=c(1,2,3))
+birm_stars2 <- birm_stars |> st_crop(bbox_poly)
+birm_stars2 |> plot(rgb=c(1,2,3))
 ```
 
 
