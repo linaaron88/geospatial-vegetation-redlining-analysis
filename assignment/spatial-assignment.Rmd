@@ -101,20 +101,104 @@ bbox_poly <- bbox |> st_as_sfc() |> st_transform(birm_crs)
 birm_stars2 <- birm_stars |> st_crop(bbox_poly)
 birm_stars2 |> plot(rgb=c(1,2,3))
 ```
+```{r}
+library(rstac)
+library(terra) 
+library(stars)
+library(tidyverse)
+library(tmap)
+
+
+
+sanfran <- sf::read_sf("/vsicurl/https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/CASanFrancisco1937.geojson")
+bbox <- st_bbox(sanfran)
+
+matches <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") |>
+  stac_search(collections = "sentinel-2-l2a",
+              bbox = bbox, datetime = "2019-06-01/2019-08-01") |>
+  get_request() |>  items_sign(sign_fn = sign_planetary_computer())
+
+properties <- map(matches$features, "properties")
+cloud_cover <- map_dbl(properties, "eo:cloud_cover")
+best <- which.min(cloud_cover)
+best_img <- matches$features[[best]] 
+
+
+## Ick we use stars sicne we don't have "terra::project()" yet
+red <- stars::read_stars( paste0("/vsicurl/", best_img$assets$B04$href) ) 
+e <- st_bbox(bbox, crs="+proj=longlat") |> st_as_sfc() |>
+  st_transform(st_crs(red)) |> vect()
+
+# Crop the first data source and download and crop others
+red <- rast( paste0("/vsicurl/", best_img$assets$B04$href) ) |> crop(e)
+nir <- rast( paste0("/vsicurl/", best_img$assets$B08$href) ) |> crop(e)
+
+ndvi_fun <- function(x, y) (x - y) / (x + y)
+ndvi <- lapp(c(nir, red), fun = ndvi_fun)
+plot(ndvi)
+
+sanfran2 <- sanfran |> st_transform(st_crs(red))
+x <- terra::extract(ndvi, vect(sanfran2), mean, na.rm=TRUE)
+
+sanfran3 <- 
+  sanfran2 |> 
+  mutate(ID = 1:n()) |>
+  left_join(as_tibble(x)) |>
+  rename(ndvi = lyr1)
+```
 
 
 # Exercise 1
 **Create a map which shows current (2019) mean NDVI across city redlining from the 1950s.**
 
 ```{r}
+denver <- sf::read_sf("/vsicurl/https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/CODenver1938.geojson")
+bbox <- st_bbox(denver)
 
+matches <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") |>
+  stac_search(collections = "sentinel-2-l2a",
+              bbox = bbox, datetime = "2019-06-01/2019-08-01") |>
+  get_request() |>  items_sign(sign_fn = sign_planetary_computer())
+
+properties <- map(matches$features, "properties")
+cloud_cover <- map_dbl(properties, "eo:cloud_cover")
+best <- which.min(cloud_cover)
+best_img <- matches$features[[best]] 
+
+
+## Ick we use stars sicne we don't have "terra::project()" yet
+red <- stars::read_stars( paste0("/vsicurl/", best_img$assets$B04$href) ) 
+e <- st_bbox(bbox, crs="+proj=longlat") |> st_as_sfc() |>
+  st_transform(st_crs(red)) |> vect()
+
+# Crop the first data source and download and crop others
+red <- rast( paste0("/vsicurl/", best_img$assets$B04$href) ) |> crop(e)
+nir <- rast( paste0("/vsicurl/", best_img$assets$B08$href) ) |> crop(e)
+
+ndvi_fun <- function(x, y) (x - y) / (x + y)
+ndvi <- lapp(c(nir, red), fun = ndvi_fun)
+plot(ndvi)
+
+denver2 <- denver |> st_transform(st_crs(red))
+x <- terra::extract(ndvi, vect(sanfran2), mean, na.rm=TRUE)
+
+denver3 <- 
+  denver2 |> 
+  mutate(ID = 1:n()) |>
+  left_join(as_tibble(x)) |>
+  rename(ndvi = lyr1)
+```
 ```
 
 # Exercise 2
 **Plot the average NDVI values in different neighborhoods as well as the distribution of pixel values across cities and neighborhoods. Show how the trends differ between cities.**
 
+```{r}
 
+```
 
 # Exercise 3: 
 **Explain why considering systematic inequity and racism is important in the context of global change and developing solutions to the biodiversity crisis.**
 
+Ecological services are growing dry, floods are running through streets, sea levels are rising, droughts and heat waves are more consistent and extreme, etc. Even though global climate change will affect everyone to some degree, some demographics will be significantly more impacted than others. Resources to combat the ways in which different populations will be threatened will be less accessible for those with lower socioeconomic status, and often times racial minorities. 
+When deriving solutions to protect communities, we must keep in mind that these demographics are the least responsible in the grand scope of human anthroprogenic environmental effects. Anaylists must problem-solve in the context of the lowest common denominator. That is, they must be aware that the climate crisis is already heavily impacting communities all over the world. 
