@@ -140,11 +140,16 @@ plot(ndvi)
 sanfran2 <- sanfran |> st_transform(st_crs(red))
 x <- terra::extract(ndvi, vect(sanfran2), mean, na.rm=TRUE)
 
+#tmap_options(check.and.fix = TRUE)
+#tm_shape(sf_ndvi) + tm_raster() +
+#  tm_shape(sanfran) + tm_polygons("holc_grade", alpha=.5)
+
 sanfran3 <- 
   sanfran2 |> 
   mutate(ID = 1:n()) |>
   left_join(as_tibble(x)) |>
   rename(ndvi = lyr1)
+sanfran3
 ```
 
 
