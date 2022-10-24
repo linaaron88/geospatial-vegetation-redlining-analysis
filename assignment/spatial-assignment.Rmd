@@ -15,6 +15,7 @@ library(terra)       # Successor to the raster library
 library(tidyverse)   # our old friend
 library(sf)          # to work with simple features (vector) data
 library(rstac)
+tmap_mode("plot")
 ```
 
 ## Learning objectives
@@ -54,8 +55,10 @@ kansascity <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/do
 brooklyn <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/NYBrooklyn1938.geojson")
 
 tmap_options(check.and.fix = TRUE)
+#final version, change all tmap modes to plot
 
-tmap_mode("view")
+# tmap_mode("view")
+tmap_mode("plot")
 sanfran |> tmap::tm_shape() +
   tm_polygons(col="holc_grade")
 
