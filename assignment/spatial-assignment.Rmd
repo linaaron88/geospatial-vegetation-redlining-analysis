@@ -111,8 +111,6 @@ library(stars)
 library(tidyverse)
 library(tmap)
 
-
-
 sanfran <- sf::read_sf("/vsicurl/https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/CASanFrancisco1937.geojson")
 bbox <- st_bbox(sanfran)
 
@@ -138,14 +136,17 @@ nir <- rast( paste0("/vsicurl/", best_img$assets$B08$href) ) |> crop(e)
 
 ndvi_fun <- function(x, y) (x - y) / (x + y)
 ndvi <- lapp(c(nir, red), fun = ndvi_fun)
+
+tmap_options(check.and.fix = TRUE)
+#tm_shape(sf_ndvi) + tm_raster() +
+#  tm_shape(sanfran) + tm_polygons("holc_grade", alpha=.5)
+
+tmap_mode("view")
 plot(ndvi)
 
 sanfran2 <- sanfran |> st_transform(st_crs(red))
 x <- terra::extract(ndvi, vect(sanfran2), mean, na.rm=TRUE)
 
-#tmap_options(check.and.fix = TRUE)
-#tm_shape(sf_ndvi) + tm_raster() +
-#  tm_shape(sanfran) + tm_polygons("holc_grade", alpha=.5)
 
 sanfran3 <- 
   sanfran2 |> 
@@ -195,6 +196,7 @@ denver3 <-
   mutate(ID = 1:n()) |>
   left_join(as_tibble(x)) |>
   rename(ndvi = lyr1)
+denver3
 ```
 ```
 

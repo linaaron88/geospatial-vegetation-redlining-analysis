@@ -7,7 +7,7 @@
 - Aaron Lin, linaaron88
 - Sara Soderberg, sodesara
 
-This repository is a template for your team's repository.
+This repository illustrates the effect of systemic racism on the ecology of an urban environment. Maps of redlined districts are overlayed with Normalized Difference Vegetation Index (NDVI) scaling to show how the vegetation varied within a city with redlined districts.
 
 ## assignment
 
