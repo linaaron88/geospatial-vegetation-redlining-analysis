@@ -49,9 +49,6 @@ Please take the time to read the introduction to this dataset [here](https://dsl
 
 ```{r}
 sanfran <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/CASanFrancisco1937.geojson")
-losang <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/CALosAngeles1939.geojson")
-seattle <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/WASeattle1936.geojson")
-kansascity <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/MOGreaterKansasCity1939.geojson")
 brooklyn <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/NYBrooklyn1938.geojson")
 
 tmap_options(check.and.fix = TRUE)
@@ -141,8 +138,12 @@ tmap_options(check.and.fix = TRUE)
 #tm_shape(sf_ndvi) + tm_raster() +
 #  tm_shape(sanfran) + tm_polygons("holc_grade", alpha=.5)
 
-tmap_mode("view")
-plot(ndvi)
+tmap_mode("plot")
+sanfran |> tmap::tm_shape() +
+  tm_polygons(col="holc_grade")
+plot(ndvi, 
+     main = "NDVI of San Francisco",
+     axes = FALSE, box = FALSE)
 
 sanfran2 <- sanfran |> st_transform(st_crs(red))
 x <- terra::extract(ndvi, vect(sanfran2), mean, na.rm=TRUE)
@@ -154,6 +155,13 @@ sanfran3 <-
   left_join(as_tibble(x)) |>
   rename(ndvi = lyr1)
 sanfran3
+```
+
+```{r}
+hist(ndvi,
+  main = "NDVI: San Francisco",
+  col = "#003262",
+  xlab = "NDVI Index Value")
 ```
 
 
@@ -204,8 +212,12 @@ denver3
 **Plot the average NDVI values in different neighborhoods as well as the distribution of pixel values across cities and neighborhoods. Show how the trends differ between cities.**
 
 ```{r}
-
+hist(ndvi,
+  main = "NDVI: Denver",
+  col = "#003262",
+  xlab = "NDVI Index Value")
 ```
+
 
 # Exercise 3: 
 **Explain why considering systematic inequity and racism is important in the context of global change and developing solutions to the biodiversity crisis.**

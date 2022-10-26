@@ -1,0 +1,24 @@
+---
+title: "example"
+author: "Aaron Lin"
+date: "2022-26-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tmap)
+library(sf)
+tmap_mode("view")
+```
+
+
+```{r}
+sanfran <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/CASanFrancisco1937.geojson")
+sanfran |> sf::st_make_valid() |>
+  tm_shape() + tm_polygons()
+```
+
