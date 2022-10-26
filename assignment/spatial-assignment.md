@@ -76,9 +76,6 @@ Please take the time to read the introduction to this dataset
 
 ``` r
 sanfran <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/CASanFrancisco1937.geojson")
-losang <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/CALosAngeles1939.geojson")
-seattle <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/WASeattle1936.geojson")
-kansascity <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/MOGreaterKansasCity1939.geojson")
 brooklyn <- sf::read_sf("https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/NYBrooklyn1938.geojson")
 
 tmap_options(check.and.fix = TRUE)
@@ -191,16 +188,33 @@ tmap_options(check.and.fix = TRUE)
 #tm_shape(sf_ndvi) + tm_raster() +
 #  tm_shape(sanfran) + tm_polygons("holc_grade", alpha=.5)
 
-tmap_mode("view")
+tmap_mode("plot")
 ```
 
-    ## tmap mode set to interactive viewing
+    ## tmap mode set to plotting
 
 ``` r
-plot(ndvi)
+sanfran |> tmap::tm_shape() +
+  tm_polygons(col="holc_grade")
 ```
 
+    ## Warning: The shape sanfran is invalid. See sf::st_is_valid
+
 ![](spatial-assignment_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+``` r
+plot(ndvi, 
+     main = "NDVI of San Francisco",
+     axes = FALSE, box = FALSE)
+```
+
+    ## Warning in plot.window(...): "box" is not a graphical parameter
+
+    ## Warning in plot.xy(xy, type, ...): "box" is not a graphical parameter
+
+    ## Warning in title(...): "box" is not a graphical parameter
+
+![](spatial-assignment_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->
 
 ``` r
 sanfran2 <- sanfran |> st_transform(st_crs(red))
@@ -234,6 +248,17 @@ sanfran3
     ##  9 <NA>  A5      A          "{ \"1\": \"T… (((548749.9 4182867, 548…     9 0.316
     ## 10 <NA>  A6      A          "{ \"1\": \"T… (((546426.9 4176500, 546…    10 0.330
     ## # … with 87 more rows, and abbreviated variable name ¹​area_description_data
+
+``` r
+hist(ndvi,
+  main = "NDVI: San Francisco",
+  col = "#003262",
+  xlab = "NDVI Index Value")
+```
+
+    ## Warning: [hist] a sample of70% of the cells was used
+
+![](spatial-assignment_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 # Exercise 1
 
@@ -273,7 +298,7 @@ ndvi <- lapp(c(nir, red), fun = ndvi_fun)
 plot(ndvi)
 ```
 
-![](spatial-assignment_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](spatial-assignment_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
 denver2 <- denver |> st_transform(st_crs(red))
@@ -307,13 +332,20 @@ denver3
     ## 10 <NA>  B12     B          "{ \"\": \"\"… (((497832.3 4401487, 497…    10   NaN
     ## # … with 44 more rows, and abbreviated variable name ¹​area_description_data
 
-\`\`\`
 
-# Exercise 2
+    # Exercise 2
+    **Plot the average NDVI values in different neighborhoods as well as the distribution of pixel values across cities and neighborhoods. Show how the trends differ between cities.**
 
-**Plot the average NDVI values in different neighborhoods as well as the
-distribution of pixel values across cities and neighborhoods. Show how
-the trends differ between cities.**
+
+    ```r
+    hist(ndvi,
+      main = "NDVI: Denver",
+      col = "#003262",
+      xlab = "NDVI Index Value")
+
+    ## Warning: [hist] a sample of49% of the cells was used
+
+![](spatial-assignment_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 # Exercise 3:
 
