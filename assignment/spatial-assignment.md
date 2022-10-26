@@ -157,8 +157,6 @@ library(stars)
 library(tidyverse)
 library(tmap)
 
-
-
 sanfran <- sf::read_sf("/vsicurl/https://dsl.richmond.edu/panorama/redlining/static/downloads/geojson/CASanFrancisco1937.geojson")
 bbox <- st_bbox(sanfran)
 
@@ -188,6 +186,17 @@ nir <- rast( paste0("/vsicurl/", best_img$assets$B08$href) ) |> crop(e)
 
 ndvi_fun <- function(x, y) (x - y) / (x + y)
 ndvi <- lapp(c(nir, red), fun = ndvi_fun)
+
+tmap_options(check.and.fix = TRUE)
+#tm_shape(sf_ndvi) + tm_raster() +
+#  tm_shape(sanfran) + tm_polygons("holc_grade", alpha=.5)
+
+tmap_mode("view")
+```
+
+    ## tmap mode set to interactive viewing
+
+``` r
 plot(ndvi)
 ```
 
@@ -197,9 +206,6 @@ plot(ndvi)
 sanfran2 <- sanfran |> st_transform(st_crs(red))
 x <- terra::extract(ndvi, vect(sanfran2), mean, na.rm=TRUE)
 
-#tmap_options(check.and.fix = TRUE)
-#tm_shape(sf_ndvi) + tm_raster() +
-#  tm_shape(sanfran) + tm_polygons("holc_grade", alpha=.5)
 
 sanfran3 <- 
   sanfran2 |> 
@@ -281,6 +287,25 @@ denver3 <-
 ```
 
     ## Joining, by = "ID"
+
+``` r
+denver3
+```
+
+    ## # A tibble: 54 × 7
+    ##    name  holc_id holc_grade area_descrip…¹                  geometry    ID  ndvi
+    ##    <chr> <chr>   <chr>      <chr>                 <MULTIPOLYGON [m]> <dbl> <dbl>
+    ##  1 <NA>  A1      A          "{ \"0\": \"D… (((507869.8 4399741, 507…     1   NaN
+    ##  2 <NA>  A2      A          "{ \"0\": \"D… (((506665.8 4398738, 506…     2   NaN
+    ##  3 <NA>  A3      A          "{ \"0\": \"D… (((507472.7 4397282, 507…     3   NaN
+    ##  4 <NA>  A4      A          "{ \"0\": \"D… (((503414.2 4397694, 503…     4   NaN
+    ##  5 <NA>  A5      A          "{ \"0\": \"D… (((503465.7 4397087, 503…     5   NaN
+    ##  6 <NA>  A6      A          "{ \"0\": \"D… (((503984 4394092, 50387…     6   NaN
+    ##  7 <NA>  B1      B          "{ \"0\": \"D… (((506159.4 4399815, 506…     7   NaN
+    ##  8 <NA>  B10     B          "{ \"0\": \"D… (((496633.6 4399343, 496…     8   NaN
+    ##  9 <NA>  B11     B          "{ \"0\": \"D… (((495490.1 4401402, 496…     9   NaN
+    ## 10 <NA>  B12     B          "{ \"\": \"\"… (((497832.3 4401487, 497…    10   NaN
+    ## # … with 44 more rows, and abbreviated variable name ¹​area_description_data
 
 \`\`\`
 
