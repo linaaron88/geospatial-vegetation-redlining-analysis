@@ -143,7 +143,7 @@ birm_stars2 <- birm_stars |> st_crop(bbox_poly)
 birm_stars2 |> plot(rgb=c(1,2,3))
 ```
 
-    ## downsample set to 2
+    ## downsample set to 3
 
 ![](spatial-assignment_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
@@ -183,6 +183,7 @@ nir <- rast( paste0("/vsicurl/", best_img$assets$B08$href) ) |> crop(e)
 
 ndvi_fun <- function(x, y) (x - y) / (x + y)
 ndvi <- lapp(c(nir, red), fun = ndvi_fun)
+sf_ndvi <- ndvi
 
 tmap_options(check.and.fix = TRUE)
 #tm_shape(sf_ndvi) + tm_raster() +
@@ -249,17 +250,6 @@ sanfran3
     ## 10 <NA>  A6      A          "{ \"1\": \"T… (((546426.9 4176500, 546…    10 0.330
     ## # … with 87 more rows, and abbreviated variable name ¹​area_description_data
 
-``` r
-hist(ndvi,
-  main = "NDVI: San Francisco",
-  col = "#003262",
-  xlab = "NDVI Index Value")
-```
-
-    ## Warning: [hist] a sample of70% of the cells was used
-
-![](spatial-assignment_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
-
 # Exercise 1
 
 **Create a map which shows current (2019) mean NDVI across city
@@ -295,10 +285,27 @@ nir <- rast( paste0("/vsicurl/", best_img$assets$B08$href) ) |> crop(e)
 
 ndvi_fun <- function(x, y) (x - y) / (x + y)
 ndvi <- lapp(c(nir, red), fun = ndvi_fun)
-plot(ndvi)
+denv_ndvi <- ndvi
+
+denver |> tmap::tm_shape() +
+  tm_polygons(col="holc_grade")
 ```
 
-![](spatial-assignment_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](spatial-assignment_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
+plot(ndvi, 
+     main = "NDVI of Denver",
+     axes = FALSE, box = FALSE)
+```
+
+    ## Warning in plot.window(...): "box" is not a graphical parameter
+
+    ## Warning in plot.xy(xy, type, ...): "box" is not a graphical parameter
+
+    ## Warning in title(...): "box" is not a graphical parameter
+
+![](spatial-assignment_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
 
 ``` r
 denver2 <- denver |> st_transform(st_crs(red))
@@ -332,20 +339,45 @@ denver3
     ## 10 <NA>  B12     B          "{ \"\": \"\"… (((497832.3 4401487, 497…    10   NaN
     ## # … with 44 more rows, and abbreviated variable name ¹​area_description_data
 
+# Exercise 2
 
-    # Exercise 2
-    **Plot the average NDVI values in different neighborhoods as well as the distribution of pixel values across cities and neighborhoods. Show how the trends differ between cities.**
+**Plot the average NDVI values in different neighborhoods as well as the
+distribution of pixel values across cities and neighborhoods. Show how
+the trends differ between cities.**
 
+``` r
+hist(sf_ndvi,
+  main = "NDVI: San Francisco",
+  col = "#003262",
+  xlab = "NDVI Index Value")
+```
 
-    ```r
-    hist(ndvi,
-      main = "NDVI: Denver",
-      col = "#003262",
-      xlab = "NDVI Index Value")
+    ## Warning: [hist] a sample of70% of the cells was used
+
+![](spatial-assignment_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+``` r
+hist(denv_ndvi,
+  main = "NDVI: Denver",
+  col = "#003262",
+  xlab = "NDVI Index Value")
+```
 
     ## Warning: [hist] a sample of49% of the cells was used
 
 ![](spatial-assignment_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+The histogram of Denver’s NDVI is more densely distributed between the
+region of 0-1.0. When comparing the redlining and vegetation map, the
+homogeneity of the vegetation does not drastically differ across
+districts based on their holc grade from redlining. By comparison, San
+Francisco has data strongly centered at an NDVI of 0 and the vegetation
+map indicates a stark contrast between the vegetation in redlined areas
+with holc grade serving as a decent indicator of vegetation. One
+possible explanation for this is the necessity of high-density housing
+in those redlined areas since inhabitants of those areas can’t relocate
+to other parts of the city due to redlining and high costs. San
+Francisco has higher population density than denver so the effects of
+redlining are more pronounced.
 
 # Exercise 3:
 
